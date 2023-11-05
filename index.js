@@ -67,6 +67,29 @@ async function run() {
         console.log(err);
       }
     });
+    app.get("/donation/food/:id", async (req, res) => {
+      try {
+        const id = req.params.id;
+        const query = { _id: new ObjectId(id) };
+        const result = await donation.findOne(query);
+        res.send(result);
+      } catch (err) {
+        console.log(err);
+      }
+    });
+
+    app.post("/donation/add/food", async (req, res) => {
+      try {
+        const food = req.body;
+        const result = await donation.insertOne(food);
+        console.log(
+          `A document was inserted with the _id: ${result.insertedId}`
+        );
+        res.send(result);
+      } catch (err) {
+        console.log(err);
+      }
+    });
 
     app.post("/addUser", async (req, res) => {
       try {
