@@ -67,6 +67,25 @@ async function run() {
         console.log(err);
       }
     });
+
+    app.get("/donation/food/search", async (req, res) => {
+      try {
+        const searchQuery = req.query.query;
+
+        const query = {
+          $or: [{ food_name: { $regex: searchQuery, $options: "i" } }],
+        };
+
+        const cursor = donation.find(query);
+        const result = await cursor.toArray();
+        res.send(result);
+      } catch (err) {
+        console.log(err);
+        res
+          .status(500)
+          .send({ error: "An error occurred while searching donations." });
+      }
+    });
     app.get("/donation/food/:id", async (req, res) => {
       try {
         const id = req.params.id;
