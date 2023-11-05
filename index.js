@@ -43,6 +43,13 @@ async function run() {
 
     const database = client.db("dataDB");
     const users = database.collection("users");
+    const donation = database.collection("dationFood");
+
+    app.get("/donation/food", async (req, res) => {
+      const cursor = donation.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
 
     app.get("/user", async (req, res) => {
       const cursor = users.find();
