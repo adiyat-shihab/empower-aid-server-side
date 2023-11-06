@@ -74,6 +74,21 @@ async function run() {
       const result = await donation.updateOne(filter, product, options);
       res.send(result);
     });
+    // donation food request update
+    app.put("/donation/request/update/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+
+      const product = {
+        $set: {
+          food_status: "Delivered",
+        },
+      };
+
+      const result = await foodRequest.updateOne(filter, product, options);
+      res.send(result);
+    });
 
     app.get("/user", async (req, res) => {
       const cursor = users.find();
@@ -149,6 +164,28 @@ async function run() {
         const id = req.params.id;
         const query = { _id: new ObjectId(id) };
         const result = await donation.findOne(query);
+        res.send(result);
+      } catch (err) {
+        console.log(err);
+      }
+    });
+    // foodrequest find one
+    app.get("/food/reques/:id", async (req, res) => {
+      try {
+        const id = req.params.id;
+        const query = { _id: new ObjectId(id) };
+        const result = await foodRequest.findOne(query);
+        res.send(result);
+      } catch (err) {
+        console.log(err);
+      }
+    });
+    // food request delete
+    app.delete("/food/reques/delete/:id", async (req, res) => {
+      try {
+        const id = req.params.id;
+        const query = { _id: new ObjectId(id) };
+        const result = await foodRequest.deleteOne(query);
         res.send(result);
       } catch (err) {
         console.log(err);
