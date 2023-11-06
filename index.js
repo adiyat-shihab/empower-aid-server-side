@@ -113,6 +113,24 @@ async function run() {
           .send({ error: "An error occurred while searching donations." });
       }
     });
+    app.get("/donation/request/search", async (req, res) => {
+      try {
+        const searchQuery = req.query.query;
+
+        const query = {
+          $or: [{ requester_email: { $regex: searchQuery, $options: "i" } }],
+        };
+
+        const cursor = foodRequest.find(query);
+        const result = await cursor.toArray();
+        res.send(result);
+      } catch (err) {
+        console.log(err);
+        res
+          .status(500)
+          .send({ error: "An error occurred while searching donations." });
+      }
+    });
 
     app.delete("/donation/food/clear/:id", async (req, res) => {
       try {
