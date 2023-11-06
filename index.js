@@ -53,6 +53,28 @@ async function run() {
       res.send(result);
     });
 
+    // this is for update the single food
+    app.put("/donation/food/update/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updateFood = req.body;
+
+      const product = {
+        $set: {
+          food_name: updateFood.food_name,
+          additional_notes: updateFood.additional_notes,
+          pickup_location: updateFood.pickup_location,
+          food_quantity: updateFood.food_quantity,
+          food_image: updateFood.food_image,
+          expired_datetime: updateFood.expired_datetime,
+        },
+      };
+
+      const result = await donation.updateOne(filter, product, options);
+      res.send(result);
+    });
+
     app.get("/user", async (req, res) => {
       const cursor = users.find();
       const result = await cursor.toArray();
