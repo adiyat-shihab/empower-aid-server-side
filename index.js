@@ -75,7 +75,10 @@ async function run() {
         const searchQuery = req.query.query;
 
         const query = {
-          $or: [{ food_name: { $regex: searchQuery, $options: "i" } }],
+          $or: [
+            { food_name: { $regex: searchQuery, $options: "i" } },
+            { "donator.email": { $regex: searchQuery, $options: "i" } },
+          ],
         };
 
         const cursor = donation.find(query);
