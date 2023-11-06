@@ -120,9 +120,9 @@ async function run() {
         const query = {
           $or: [{ food_id: { $regex: searchQuery, $options: "i" } }],
         };
-        const cursor = await foodRequest.find(query);
-        const result = await cursor.toArray();
-        res.send(result);
+        const cursor = await foodRequest.findOne(query);
+
+        res.send(cursor);
       } catch (err) {
         console.log(err);
       }
