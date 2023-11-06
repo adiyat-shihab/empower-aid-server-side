@@ -127,6 +127,33 @@ async function run() {
         console.log(err);
       }
     });
+    app.get("/donation/manage/food/search", async (req, res) => {
+      try {
+        const searchQuery = req.query.query;
+        const query = {
+          $or: [{ food_id: { $regex: searchQuery, $options: "i" } }],
+        };
+        const cursor = await foodRequest.find(query);
+        const result = await cursor.toArray();
+
+        res.send(result);
+      } catch (err) {
+        console.log(err);
+      }
+    });
+    app.delete("/donation/manage/food/clear/:id", async (req, res) => {
+      try {
+        const id = req.params.id;
+        const query = {
+          $or: [{ food_id: { $regex: id, $options: "i" } }],
+        };
+        const result = await foodRequest.deleteMany(query);
+        res.send(result);
+      } catch (err) {
+        console.log(err);
+        res.send(err);
+      }
+    });
 
     app.post("/donation/add/food", async (req, res) => {
       try {
