@@ -11,10 +11,11 @@ require("dotenv").config();
 
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: ["http://localhost:5173", "https://donation-af25b.web.app"],
     credentials: true,
   })
 );
+
 app.use(express.json());
 app.use(cookieParser());
 
@@ -44,6 +45,7 @@ async function run() {
     const database = client.db("dataDB");
     const users = database.collection("users");
     const donation = database.collection("dationFood");
+    const foodRequest = database.collection("Food Request");
 
     app.get("/donation/food", async (req, res) => {
       const cursor = donation.find();
@@ -101,6 +103,18 @@ async function run() {
       try {
         const food = req.body;
         const result = await donation.insertOne(food);
+        console.log(
+          `A document was inserted with the _id: ${result.insertedId}`
+        );
+        res.send(result);
+      } catch (err) {
+        console.log(err);
+      }
+    });
+    app.post("/donation/food/request", async (req, res) => {
+      try {
+        const food = req.body;
+        const result = await foodRequest.insertOne(food);
         console.log(
           `A document was inserted with the _id: ${result.insertedId}`
         );
