@@ -91,6 +91,19 @@ async function run() {
           .send({ error: "An error occurred while searching donations." });
       }
     });
+
+    app.delete("/donation/food/clear/:id", async (req, res) => {
+      try {
+        const id = req.params.id;
+        const query = { _id: new ObjectId(id) };
+        const result = await donation.deleteOne(query);
+        res.send(result);
+      } catch (err) {
+        console.log(err);
+        res.send(err);
+      }
+    });
+
     app.get("/donation/food/:id", async (req, res) => {
       try {
         const id = req.params.id;
