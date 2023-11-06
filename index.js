@@ -114,6 +114,19 @@ async function run() {
         console.log(err);
       }
     });
+    app.get("/donation/manage/food", async (req, res) => {
+      try {
+        const searchQuery = req.query.query;
+        const query = {
+          $or: [{ food_id: { $regex: searchQuery, $options: "i" } }],
+        };
+        const cursor = await foodRequest.find(query);
+        const result = await cursor.toArray();
+        res.send(result);
+      } catch (err) {
+        console.log(err);
+      }
+    });
 
     app.post("/donation/add/food", async (req, res) => {
       try {
@@ -122,6 +135,7 @@ async function run() {
         console.log(
           `A document was inserted with the _id: ${result.insertedId}`
         );
+
         res.send(result);
       } catch (err) {
         console.log(err);
