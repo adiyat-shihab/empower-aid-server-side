@@ -37,6 +37,10 @@ const client = new MongoClient(uri, {
   },
 });
 
+const verifyToken = (req, res, next) => {
+  next();
+};
+
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
@@ -186,7 +190,7 @@ async function run() {
       }
     });
 
-    app.get("/donation/food/:id", async (req, res) => {
+    app.get("/donation/food/:id", verifyToken, async (req, res) => {
       try {
         const id = req.params.id;
         const query = { _id: new ObjectId(id) };
@@ -259,7 +263,7 @@ async function run() {
       }
     });
 
-    app.post("/donation/add/food", async (req, res) => {
+    app.post("/donation/add/food", verifyToken, async (req, res) => {
       try {
         const food = req.body;
         const result = await donation.insertOne(food);
