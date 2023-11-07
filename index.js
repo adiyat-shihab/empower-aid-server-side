@@ -53,6 +53,27 @@ async function run() {
       res.send(result);
     });
 
+    // highest quantity
+    app.get("/donation/highest", async (req, res) => {
+      try {
+        const result = await donation
+          .aggregate([
+            {
+              $sort: { food_quantity: -1 },
+            },
+            {
+              $limit: 6,
+            },
+          ])
+          .toArray();
+
+        res.send(result);
+      } catch (error) {
+        console.error(error);
+        res.status(500).send("An error occurred while fetching the data.");
+      }
+    });
+
     // this is for update the single food
     app.put("/donation/food/update/:id", async (req, res) => {
       const id = req.params.id;
@@ -92,6 +113,12 @@ async function run() {
 
     app.get("/user", async (req, res) => {
       const cursor = users.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    app.get("/donation/sort", async (req, res) => {
+      const cursor = donation.find().sort({ expired_datetime: 1 });
       const result = await cursor.toArray();
       res.send(result);
     });
